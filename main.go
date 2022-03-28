@@ -1,8 +1,8 @@
 package main
 
 import (
-	"bookCRUD/models"
-	"bookCRUD/routes"
+	"github.com/sklad/models"
+	"github.com/sklad/routes"
 )
 
 func main() {
