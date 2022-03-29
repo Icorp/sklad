@@ -6,79 +6,71 @@ import (
 	"net/http"
 )
 
-func ListClients(c *gin.Context) {
-	clientRepo := c.MustGet("clientRepo").(models.ClientRepo)
-	clients, err := clientRepo.GetAll()
+func ListOrders(c *gin.Context) {
+	orderRepo := c.MustGet("orderRepo").(models.OrderRepo)
+	orders, err := orderRepo.GetAll()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, clients)
+	c.JSON(http.StatusOK, orders)
 }
 
-func GetClient(c *gin.Context) {
-	clientRepo := c.MustGet("clientRepo").(models.ClientRepo)
-	client, err := clientRepo.GetByID(c.Param("id"))
+func GetOrder(c *gin.Context) {
+	orderRepo := c.MustGet("orderRepo").(models.OrderRepo)
+	order, err := orderRepo.GetByID(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, client)
+	c.JSON(http.StatusOK, order)
 }
 
-func UpdateClient(c *gin.Context) {
-	clientRepo := c.MustGet("clientRepo").(models.ClientRepo)
-	var data *models.Client
-	if err := c.ShouldBindJSON(&data); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+func CreateOrder(c *gin.Context) {
+	orderRepo := c.MustGet("orderRepo").(models.OrderRepo)
+	order := models.Order{}
+	err := c.BindJSON(&order)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	err := clientRepo.Update(data)
+	err = orderRepo.Create(&order)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-	})
+	c.JSON(http.StatusCreated, order)
 }
 
-func DeleteClient(c *gin.Context) {
-	clientRepo := c.MustGet("clientRepo").(models.ClientRepo)
-	err := clientRepo.Delete(c.Param("id"))
+func UpdateOrder(c *gin.Context) {
+	orderRepo := c.MustGet("orderRepo").(models.OrderRepo)
+	order := models.Order{}
+	err := c.BindJSON(&order)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = orderRepo.Update(&order)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-	})
+	c.JSON(http.StatusOK, order)
 }
 
-func CreateClient(c *gin.Context) {
-	clientRepo := c.MustGet("clientRepo").(models.ClientRepo)
-	var data *models.Client
-	if err := c.ShouldBindJSON(&data); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-	err := clientRepo.Create(data)
+func DeleteOrder(c *gin.Context) {
+	orderRepo := c.MustGet("orderRepo").(models.OrderRepo)
+	err := orderRepo.Delete(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-	})
+	c.JSON(http.StatusOK, gin.H{"status": "deleted"})
 }

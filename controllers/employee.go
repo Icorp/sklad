@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-func ListClients(c *gin.Context) {
-	clientRepo := c.MustGet("clientRepo").(models.ClientRepo)
-	clients, err := clientRepo.GetAll()
+func ListEmployees(c *gin.Context) {
+	employeeRepo := c.MustGet("employeeRepo").(models.EmployeeRepo)
+	clients, err := employeeRepo.GetAll()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -17,20 +17,21 @@ func ListClients(c *gin.Context) {
 	c.JSON(http.StatusOK, clients)
 }
 
-func GetClient(c *gin.Context) {
-	clientRepo := c.MustGet("clientRepo").(models.ClientRepo)
-	client, err := clientRepo.GetByID(c.Param("id"))
+func GetEmployee(c *gin.Context) {
+	employeeRepo := c.MustGet("employeeRepo").(models.EmployeeRepo)
+	id := c.Params.ByName("id")
+	employee, err := employeeRepo.GetByID(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, client)
+	c.JSON(http.StatusOK, employee)
 }
 
-func UpdateClient(c *gin.Context) {
-	clientRepo := c.MustGet("clientRepo").(models.ClientRepo)
-	var data *models.Client
+func CreateEmployee(c *gin.Context) {
+	employeeRepo := c.MustGet("employeeRepo").(models.EmployeeRepo)
+	var data *models.Employee
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -38,33 +39,18 @@ func UpdateClient(c *gin.Context) {
 		return
 	}
 
-	err := clientRepo.Update(data)
+	err := employeeRepo.Create(data)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-	})
+	c.JSON(http.StatusOK, data)
 }
 
-func DeleteClient(c *gin.Context) {
-	clientRepo := c.MustGet("clientRepo").(models.ClientRepo)
-	err := clientRepo.Delete(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-	})
-}
-
-func CreateClient(c *gin.Context) {
-	clientRepo := c.MustGet("clientRepo").(models.ClientRepo)
-	var data *models.Client
+func UpdateEmployee(c *gin.Context) {
+	employeeRepo := c.MustGet("employeeRepo").(models.EmployeeRepo)
+	var data *models.Employee
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -72,13 +58,23 @@ func CreateClient(c *gin.Context) {
 		return
 	}
 
-	err := clientRepo.Create(data)
+	err := employeeRepo.Update(data)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-	})
+	c.JSON(http.StatusOK, data)
+}
+
+func DeleteEmployee(c *gin.Context) {
+	employeeRepo := c.MustGet("employeeRepo").(models.EmployeeRepo)
+	id := c.Params.ByName("id")
+	err := employeeRepo.Delete(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"id": id})
 }
