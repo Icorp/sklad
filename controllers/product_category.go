@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sklad/models"
-	"net/http"
 )
 
 func ListProductCategories(c *gin.Context) {
