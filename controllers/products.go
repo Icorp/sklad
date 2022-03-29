@@ -41,6 +41,7 @@ func CreateProduct(c *gin.Context) {
 	}
 
 	productRepo := c.MustGet("productRepo").(models.ProductRepo)
+
 	err := productRepo.Create(data)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

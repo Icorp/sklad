@@ -16,7 +16,21 @@ func CreateProvider(c *gin.Context) {
 		return
 	}
 
-	err := providerRepo.Create(data)
+	providers, err := providerRepo.GetAll()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	for i := range providers {
+		if providers[i].Name == data.Name {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "product_category_already_exists",
+			})
+			return
+		}
+	}
+
+	err = providerRepo.Create(data)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -35,10 +49,7 @@ func ListProviders(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-		"data":   providers,
-	})
+	c.JSON(http.StatusOK, providers)
 }
 
 func GetProvider(c *gin.Context) {

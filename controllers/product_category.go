@@ -31,7 +31,21 @@ func CreateProductCategory(c *gin.Context) {
 	}
 
 	productCategoryRepo := c.MustGet("productCategoryRepo").(models.ProductCategoryRepo)
-	err := productCategoryRepo.Create(data)
+	productCategories, err := productCategoryRepo.GetAll()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	for i := range productCategories {
+		if productCategories[i].Name == data.Name {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "product_category_already_exists",
+			})
+			return
+		}
+	}
+
+	err = productCategoryRepo.Create(data)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),

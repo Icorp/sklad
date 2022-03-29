@@ -72,7 +72,21 @@ func CreateClient(c *gin.Context) {
 		return
 	}
 
-	err := clientRepo.Create(data)
+	clients, err := clientRepo.GetAll()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	for i := range clients {
+		if clients[i].Name == data.Name {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "product_category_already_exists",
+			})
+			return
+		}
+	}
+
+	err = clientRepo.Create(data)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

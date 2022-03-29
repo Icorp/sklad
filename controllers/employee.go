@@ -8,13 +8,13 @@ import (
 
 func ListEmployees(c *gin.Context) {
 	employeeRepo := c.MustGet("employeeRepo").(models.EmployeeRepo)
-	clients, err := employeeRepo.GetAll()
+	employees, err := employeeRepo.GetAll()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, clients)
+	c.JSON(http.StatusOK, employees)
 }
 
 func GetEmployee(c *gin.Context) {
@@ -45,7 +45,9 @@ func CreateEmployee(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, data)
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
 }
 
 func UpdateEmployee(c *gin.Context) {
@@ -64,7 +66,9 @@ func UpdateEmployee(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, data)
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
 }
 
 func DeleteEmployee(c *gin.Context) {
@@ -76,5 +80,7 @@ func DeleteEmployee(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
 }

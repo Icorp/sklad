@@ -30,38 +30,44 @@ func GetOrder(c *gin.Context) {
 
 func CreateOrder(c *gin.Context) {
 	orderRepo := c.MustGet("orderRepo").(models.OrderRepo)
-	order := models.Order{}
-	err := c.BindJSON(&order)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	var data *models.Order
+	if err := c.ShouldBindJSON(&data); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
-	err = orderRepo.Create(&order)
+	err := orderRepo.Create(data)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, order)
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
 }
 
 func UpdateOrder(c *gin.Context) {
 	orderRepo := c.MustGet("orderRepo").(models.OrderRepo)
-	order := models.Order{}
-	err := c.BindJSON(&order)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	var data *models.Order
+	if err := c.ShouldBindJSON(&data); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
-	err = orderRepo.Update(&order)
+	err := orderRepo.Update(data)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, order)
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
 }
 
 func DeleteOrder(c *gin.Context) {
