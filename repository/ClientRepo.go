@@ -37,7 +37,7 @@ func (c clientRepo) GetAll() ([]*models.Client, error) {
 }
 
 func (c clientRepo) Update(client *models.Client) error {
-	_, err := c.db.Model(client).Where("id = ?", client.ID).Update()
+	_, err := c.db.Model(client).Where("id = ?", client.ID).UpdateNotZero()
 	return err
 }
 

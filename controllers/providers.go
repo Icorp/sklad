@@ -62,10 +62,7 @@ func GetProvider(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-		"data":   provider,
-	})
+	c.JSON(http.StatusOK, provider)
 }
 
 func UpdateProvider(c *gin.Context) {

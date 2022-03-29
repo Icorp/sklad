@@ -31,7 +31,7 @@ func (p productRepo) GetAll() ([]*models.Product, error) {
 }
 
 func (p productRepo) Update(product *models.Product) error {
-	_, err := p.db.Model(product).Where("id = ?", product.ID).Update()
+	_, err := p.db.Model(product).Where("id = ?", product.ID).UpdateNotZero()
 	return err
 }
 

@@ -31,7 +31,7 @@ func (o orderRepo) GetAll() ([]*models.Order, error) {
 }
 
 func (o orderRepo) Update(order *models.Order) error {
-	_, err := o.db.Model(order).Where("id = ?", order.ID).Update()
+	_, err := o.db.Model(order).Where("id = ?", order.ID).UpdateNotZero()
 	return err
 }
 

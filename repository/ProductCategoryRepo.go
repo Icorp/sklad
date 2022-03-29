@@ -33,7 +33,7 @@ func (p productCategoryRepo) GetAll() ([]*models.ProductCategory, error) {
 
 func (p productCategoryRepo) Update(productCategory *models.ProductCategory) error {
 	spew.Dump(productCategory)
-	_, err := p.db.Model(productCategory).Where("id = ?", productCategory.ID).Update()
+	_, err := p.db.Model(productCategory).Where("id = ?", productCategory.ID).UpdateNotZero()
 	return err
 }
 

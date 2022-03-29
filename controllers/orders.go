@@ -31,6 +31,9 @@ func GetOrder(c *gin.Context) {
 
 func CreateOrder(c *gin.Context) {
 	orderRepo := c.MustGet("orderRepo").(models.OrderRepo)
+	clientRepo := c.MustGet("clientRepo").(models.ClientRepo)
+	productRepo := c.MustGet("productRepo").(models.ProductRepo)
+
 	var data *models.Order
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -39,7 +42,42 @@ func CreateOrder(c *gin.Context) {
 		return
 	}
 
-	err := orderRepo.Create(data)
+	// Check CLient Access
+	client, err := clientRepo.GetByID(data.ClientID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"id":    client,
+			"error": err.Error(),
+		})
+		return
+	}
+
+	// Check Product
+	product, err := productRepo.GetByID(data.ProductID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"id":    product,
+			"error": err.Error(),
+		})
+		return
+	}
+	if product.Count <= data.Count {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "count_of_product_not_enouth",
+		})
+		return
+	}
+
+	err = productRepo.Update(&models.Product{
+		ID:    data.ProductID,
+		Count: product.Count - data.Count,
+	})
+	if err != nil {
+		_ = err.Error()
+		return
+	}
+
+	err = orderRepo.Create(data)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -82,5 +120,7 @@ func DeleteOrder(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": "deleted"})
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
 }

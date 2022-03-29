@@ -31,7 +31,7 @@ func (p employeeRepo) GetAll() ([]*models.Employee, error) {
 }
 
 func (p employeeRepo) Update(employee *models.Employee) error {
-	_, err := p.db.Model(employee).Where("id = ?", employee.ID).Update()
+	_, err := p.db.Model(employee).Where("id = ?", employee.ID).UpdateNotZero()
 	return err
 }
 
