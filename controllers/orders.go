@@ -8,6 +8,17 @@ import (
 )
 
 func ListOrders(c *gin.Context) {
+	type response struct {
+		ID              string                  `json:"id"`
+		Product         *models.Product         `json:"product"`
+		Provider        *models.Provider        `json:"provider"`
+		ProductCategory *models.ProductCategory `json:"product_category"`
+		Employee        *models.Employee        `json:"employee"`
+		CreatedAt       string                  `json:"created_at"`
+		Address         string                  `json:"address"`
+		Count           int                     `json:"count"`
+	}
+
 	orderRepo := c.MustGet("orderRepo").(models.OrderRepo)
 	orders, err := orderRepo.GetAll()
 	if err != nil {
@@ -15,7 +26,18 @@ func ListOrders(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, orders)
+	ordersResponse := make([]response, len(orders))
+	for i := range orders {
+		ordersResponse[i].ID = orders[i].ID
+		ordersResponse[i].Product = orders[i].Product
+		ordersResponse[i].Provider = orders[i].Provider
+		ordersResponse[i].ProductCategory = orders[i].ProductCategory
+		ordersResponse[i].Employee = orders[i].Employee
+		ordersResponse[i].Address = orders[i].Address
+		ordersResponse[i].Count = orders[i].Count
+	}
+
+	c.JSON(http.StatusOK, ordersResponse)
 }
 
 func GetOrder(c *gin.Context) {

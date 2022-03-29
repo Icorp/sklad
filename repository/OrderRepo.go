@@ -26,7 +26,12 @@ func (o orderRepo) GetByID(id string) (*models.Order, error) {
 
 func (o orderRepo) GetAll() ([]*models.Order, error) {
 	orders := make([]*models.Order, 0)
-	err := o.db.Model(&orders).Select()
+	err := o.db.Model(&orders).
+		Relation("Product").
+		Relation("Provider").
+		Relation("Employee").
+		Relation("ProductCategory").
+		Select()
 	return orders, err
 }
 

@@ -9,7 +9,7 @@ func SetupDB() *pg.DB {
 	db := pg.Connect(&pg.Options{
 		Addr:     ":5432",
 		User:     "postgres",
-		Password: "root",
+		Password: "admin",
 		Database: "sklad",
 	})
 	return db

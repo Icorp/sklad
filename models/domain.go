@@ -25,15 +25,20 @@ type Employee struct {
 }
 
 type Order struct {
-	ID         string    `json:"id"`
-	ClientID   string    `json:"client_id"`
-	ProductID  string    `json:"product_id"`
-	EmployeeID string    `json:"employee_id"`
-	Count      int       `json:"count"`
-	Address    string    `json:"address"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
-	tableName  struct{}  `pg:"orders"` //nolint
+	ID              string           `json:"id"`
+	ClientID        string           `json:"client_id"`
+	ProductID       string           `json:"product_id"`
+	EmployeeID      string           `json:"employee_id"`
+	Count           int              `json:"count"`
+	Address         string           `json:"address"`
+	CreatedAt       time.Time        `json:"created_at"`
+	UpdatedAt       time.Time        `json:"updated_at"`
+	Order           *Order           `pg:"rel:has-one"`
+	Provider        *Provider        `pg:"rel:has-one"`
+	Product         *Product         `pg:"rel:has-one"`
+	ProductCategory *ProductCategory `pg:"rel:has-one"`
+	Employee        *Employee        `pg:"rel:has-one"`
+	tableName       struct{}         `pg:"orders"` //nolint
 }
 
 type ProductCategory struct {
