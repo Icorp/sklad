@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"bookCRUD/models"
 	"github.com/go-pg/pg/v10/orm"
+	"github.com/sklad/models"
 )
 
 type orderRepo struct {
