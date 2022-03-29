@@ -82,6 +82,9 @@ func UpdateProductCategory(c *gin.Context) {
 		return
 	}
 
+	id := c.Param("id")
+	data.ID = id
+
 	productCategoryRepo := c.MustGet("productCategoryRepo").(models.ProductCategoryRepo)
 	err := productCategoryRepo.Update(data)
 	if err != nil {

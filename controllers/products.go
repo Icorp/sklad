@@ -3,9 +3,10 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sklad/models"
-	"net/http"
 )
 
 func ListProducts(c *gin.Context) {
@@ -61,6 +62,9 @@ func UpdateProduct(c *gin.Context) {
 		})
 		return
 	}
+
+	id := c.Param("id")
+	data.ID = id
 
 	productRepo := c.MustGet("productRepo").(models.ProductRepo)
 	err := productRepo.Update(data)

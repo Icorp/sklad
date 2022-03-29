@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sklad/models"
-	"net/http"
 )
 
 func CreateProvider(c *gin.Context) {
@@ -76,6 +77,9 @@ func UpdateProvider(c *gin.Context) {
 		})
 		return
 	}
+
+	id := c.Param("id")
+	data.ID = id
 
 	err := providerRepo.Update(data)
 	if err != nil {

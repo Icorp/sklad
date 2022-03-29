@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sklad/models"
-	"net/http"
 )
 
 func ListClients(c *gin.Context) {
@@ -37,6 +38,9 @@ func UpdateClient(c *gin.Context) {
 		})
 		return
 	}
+
+	id := c.Param("id")
+	data.ID = id
 
 	err := clientRepo.Update(data)
 	if err != nil {

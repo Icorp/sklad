@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/davecgh/go-spew/spew"
 	"github.com/go-pg/pg/v10/orm"
 	"github.com/sklad/models"
 )
@@ -31,6 +32,7 @@ func (p productCategoryRepo) GetAll() ([]*models.ProductCategory, error) {
 }
 
 func (p productCategoryRepo) Update(productCategory *models.ProductCategory) error {
+	spew.Dump(productCategory)
 	_, err := p.db.Model(productCategory).Where("id = ?", productCategory.ID).Update()
 	return err
 }

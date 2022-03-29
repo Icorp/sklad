@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sklad/models"
-	"net/http"
 )
 
 func ListEmployees(c *gin.Context) {
@@ -59,6 +60,9 @@ func UpdateEmployee(c *gin.Context) {
 		})
 		return
 	}
+
+	id := c.Param("id")
+	data.ID = id
 
 	err := employeeRepo.Update(data)
 	if err != nil {
