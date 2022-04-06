@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
 	"github.com/sklad/models"
 )
@@ -24,7 +25,28 @@ func (o orderRepo) GetByID(id string) (*models.Order, error) {
 	return order, err
 }
 
-func (o orderRepo) GetAll() ([]*models.Order, error) {
+func (o orderRepo) GetAll(request *models.OrderRequest) ([]*models.Order, error) {
+	orders := make([]*models.Order, 0)
+	query := o.db.Model(&orders)
+
+	if request != nil {
+		if request.From != nil {
+			query.Where("created_at > ?", request.From)
+		}
+
+		if request.To != nil {
+			query.Where("created_at < ?", request.To)
+		}
+	}
+
+	if err := query.Select(); err != nil && err != pg.ErrNoRows {
+		return nil, err
+	}
+
+	return orders, nil
+}
+
+func (o orderRepo) List() ([]*models.Order, error) {
 	orders := make([]*models.Order, 0)
 	err := o.db.Model(&orders).
 		Relation("Product").
@@ -32,6 +54,7 @@ func (o orderRepo) GetAll() ([]*models.Order, error) {
 		Relation("Employee").
 		Relation("ProductCategory").
 		Select()
+
 	return orders, err
 }
 

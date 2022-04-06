@@ -55,5 +55,7 @@ func SetupRoutes(db *pg.DB) *gin.Engine {
 	r.POST("/providers/:id", controllers.UpdateProvider)
 	r.POST("/providers", controllers.CreateProvider)
 	r.DELETE("/providers/:id", controllers.DeleteProvider)
+
+	r.GET("/sklad_info",controllers.GetSkladInfo)
 	return r
 }

@@ -1,4 +1,5 @@
-create DATABASE "sklad";
+create
+DATABASE "sklad";
 
 create table product_category
 (
@@ -64,6 +65,7 @@ create table orders
         references employees,
     count       integer,
     address     text,
+    price       integer                                            not null,
     created_at  timestamp with time zone default now(),
     updated_at  timestamp with time zone default now()
 );

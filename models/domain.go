@@ -31,6 +31,7 @@ type Order struct {
 	EmployeeID      string           `json:"employee_id"`
 	Count           int              `json:"count"`
 	Address         string           `json:"address"`
+	CurrentPrice    int              `json:"current_price"`
 	CreatedAt       time.Time        `json:"created_at"`
 	UpdatedAt       time.Time        `json:"updated_at"`
 	Order           *Order           `pg:"rel:has-one"`
@@ -86,10 +87,16 @@ type EmployeeRepo interface {
 	Delete(id string) error
 }
 
+type OrderRequest struct {
+	From *time.Time
+	To   *time.Time
+}
+
 type OrderRepo interface {
 	Create(order *Order) error
 	GetByID(id string) (*Order, error)
-	GetAll() ([]*Order, error)
+	GetAll(request *OrderRequest) ([]*Order, error)
+	List() ([]*Order, error)
 	Update(order *Order) error
 	Delete(id string) error
 }
