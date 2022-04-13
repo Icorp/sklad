@@ -79,6 +79,8 @@ func GetSkladInfo(c *gin.Context) {
 			return
 		}
 
+		product.Price = orders[i].CurrentPrice
+
 		employee, err := employeeRepo.GetByID(orders[i].EmployeeID)
 		if err != nil {
 			_ = c.Error(err)
